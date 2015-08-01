@@ -79,6 +79,17 @@
              (mget akeys))
            ))
     )
+  (testing "make operation"
+    (is (not (nil? (mkop :get (mk-bin "name" 1)))))
+    )
+  (testing "operate"
+    (is (= {"b1" 2}
+           (do
+               (put! "demo" "t9" {"b1" 1 "b2" 2})
+               (operate! @conn-atom @ns-atom "demo" "t9" :add "b1" 1 :put "b2" nil)
+               (get "demo" "t9")
+               )))
+    )
 
   )
 

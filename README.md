@@ -11,11 +11,14 @@ Idiomatic Clojure wrapper around AeroSpike Java client.
 
 ### Implemented
 Only Key value store operations are covered so far
+####Connection
 * connect (connect!) (connect-to-multi!)
+####Key Value Store
 * write (put!)
 * read (get)
 * batch read (mget)
 * delete (delete!)
+* operate (operate!)
 
 
 ## License

@@ -1,7 +1,7 @@
 (ns aeroclj.core
   "Idiomatic Clojure wrapper around AeroSpike Java client."
 
-  (:import (com.aerospike.client AerospikeClient Key Bin Record)
+  (:import (com.aerospike.client AerospikeClient Key Bin Record Operation)
            (com.aerospike.client.policy WritePolicy ClientPolicy)
            (clojure.lang IPersistentMap))
   (:refer-clojure :exclude [get]))
@@ -28,8 +28,11 @@
 (defn mkkey [^String ns ^String set ^String key]
   (Key. ns set key))
 
+(defn mk-bin [^String name value]
+  (Bin. ^String name value))
+
 (defn ->bin [^IPersistentMap bins]
-  (let [bin-seq (map #(Bin. ^String (first %) (second %)) bins)]
+  (let [bin-seq (map #(mk-bin (first %) (second %)) bins)]
     (into-array Bin bin-seq)))
 
 (defn init-once!
@@ -65,7 +68,7 @@
   ([#^"[Lcom.aerospike.client.Key;" keys]
    (mget @conn-atom keys))
   ([^AerospikeClient conn keys]
-   (let [records (seq (.get conn *aero-wp* keys)) ]
+   (let [records (seq (.get conn *aero-wp* keys))]
      (when records
        (map #(.bins %) records))))
   )
@@ -75,4 +78,33 @@
    (delete! @conn-atom @ns-atom set key))
   ([^AerospikeClient conn ns set key]
    (.delete conn *aero-wp* (mkkey ns set key)))
+  )
+
+(defn mkop
+  "create the operation based on the type and bin
+  [:get bin1 :put bin2 :delete bin3]
+  "
+  [op-type bin]
+  (println op-type bin)
+  (case op-type
+    :get (Operation/get)
+    :put (Operation/put bin)
+    :add (Operation/add bin)
+    (throw (new RuntimeException "unknown op type")))
+  )
+
+(defn ->ops [params]
+  (let [op-parts (partition 3 (seq params))]
+    (map #(mkop (first %) (mk-bin (first (rest %)) (second (rest %)))) op-parts)))
+
+
+(defn operate!
+  "multiple operations on a single key
+  ops syntax:
+  :add \"b1\" 1 :delete \"b2\" nil
+
+
+  "
+  ([^AerospikeClient conn ns set key & ops]
+   (.operate conn *aero-wp* (mkkey ns set key) (into-array Operation (->ops ops))))
   )
