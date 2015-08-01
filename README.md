@@ -19,6 +19,11 @@ Only Key value store operations are covered so far
 * batch read (mget)
 * delete (delete!)
 * operate (operate!)
+####UDF
+* register (register-and-wait!)
+* execute (execute!)
+####Query
+* manage indexes (create-index!) (drop-index!)
 
 
 ## License

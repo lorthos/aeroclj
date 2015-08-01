@@ -8,8 +8,10 @@
 
 (def ^:dynamic ^String *aero-host* "192.168.99.100")
 (def ^:dynamic ^Integer *aero-port* 32771)
-(def ^:dynamic ^WritePolicy *aero-wp* (WritePolicy.))
-(def ^:dynamic ^ClientPolicy *aero-cp* (ClientPolicy.))
+(def ^:dynamic ^WritePolicy *wp* (WritePolicy.))
+(def ^:dynamic ^ClientPolicy *cp* (ClientPolicy.))
+(def ^:dynamic ^Integer *sleep-interval* 1000)
+
 (def ns-atom (atom "test"))
 (def conn-atom (atom nil))
 
@@ -48,7 +50,7 @@
   ([set key bins]
    (put! @conn-atom @ns-atom set key bins))
   ([^AerospikeClient conn ns set key bins]
-   (.put conn *aero-wp* (mkkey ns set key) (->bin bins)))
+   (.put conn *wp* (mkkey ns set key) (->bin bins)))
   )
 
 (defn mk-ttl [^Integer sec]
@@ -60,7 +62,7 @@
   ([set key]
    (get @conn-atom @ns-atom set key))
   ([^AerospikeClient conn ns set key]
-   (let [record ^Record (.get conn *aero-wp* (mkkey ns set key))]
+   (let [record ^Record (.get conn *wp* (mkkey ns set key))]
      (when record
        (.bins record)))))
 
@@ -68,7 +70,7 @@
   ([#^"[Lcom.aerospike.client.Key;" keys]
    (mget @conn-atom keys))
   ([^AerospikeClient conn keys]
-   (let [records (seq (.get conn *aero-wp* keys))]
+   (let [records (seq (.get conn *wp* keys))]
      (when records
        (map #(.bins %) records))))
   )
@@ -77,7 +79,7 @@
   ([set key]
    (delete! @conn-atom @ns-atom set key))
   ([^AerospikeClient conn ns set key]
-   (.delete conn *aero-wp* (mkkey ns set key)))
+   (.delete conn *wp* (mkkey ns set key)))
   )
 
 (defn mkop
@@ -106,5 +108,5 @@
 
   "
   ([^AerospikeClient conn ns set key & ops]
-   (.operate conn *aero-wp* (mkkey ns set key) (into-array Operation (->ops ops))))
+   (.operate conn *wp* (mkkey ns set key) (into-array Operation (->ops ops))))
   )

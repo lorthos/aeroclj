@@ -2,8 +2,7 @@
   (:refer-clojure :exclude [get])
   (:require [clojure.test :refer :all]
             [aeroclj.core :refer :all])
-  (:import (com.aerospike.client Bin Key)
-           (com.aerospike.client.policy WritePolicy)))
+  (:import (com.aerospike.client Bin Key)))
 
 (def conn (atom nil))
 
@@ -16,7 +15,7 @@
 
 (use-fixtures :once aero-fixture)
 
-(deftest create-entry
+(deftest core-test
   (testing "mkbin"
     (is (= (Bin. "bin1" "value1")
            (first (mkbin {"bin1" "value1"}))
