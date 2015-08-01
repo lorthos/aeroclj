@@ -9,20 +9,19 @@ Idiomatic Clojure wrapper around AeroSpike Java client.
     (get "demo" "test1")
 
 
-### Implemented
-Only Key value store operations are covered so far
-####Connection
+## Api
+###Connection
 * connect (connect!) (connect-to-multi!)
-####Key Value Store
+###Key Value Store
 * write (put!)
 * read (get)
 * batch read (mget)
 * delete (delete!)
 * operate (operate!)
-####UDF
+###UDF
 * register (register-and-wait!)
 * execute (execute!)
-####Query
+###Query
 * manage indexes (create-index!) (drop-index!)
 
 
