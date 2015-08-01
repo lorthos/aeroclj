@@ -10,17 +10,21 @@ Idiomatic Clojure wrapper around AeroSpike Java client.
 
 
 ## Api
+
 ###Connection
 * connect (connect!) (connect-to-multi!)
+
 ###Key Value Store
 * write (put!)
 * read (get)
 * batch read (mget)
 * delete (delete!)
 * operate (operate!)
+
 ###UDF
 * register (register-and-wait!)
 * execute (execute!)
+
 ###Query
 * manage indexes (create-index!) (drop-index!)
 
