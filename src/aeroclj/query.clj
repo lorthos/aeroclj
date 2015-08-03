@@ -39,4 +39,5 @@
 
 
 (defn query [^AerospikeClient conn ^Statement stmt]
-  (iterator-seq (.iterator (.query conn *qp* stmt))))
+  (with-open [rs (.query conn *qp* stmt)]
+    (iterator-seq (.iterator rs))))

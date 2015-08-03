@@ -18,7 +18,7 @@
 (deftest core-test
   (testing "mkbin"
     (is (= (Bin. "bin1" "value1")
-           (first (mkbin {"bin1" "value1"}))
+           (first (mk-bin {"bin1" "value1"}))
            ))
     )
   (testing " put! and get"
@@ -57,7 +57,7 @@
            ))
     )
   (testing "ttl with write policy"
-    (is (nil? (with-bindings {#'*aero-wp* (mk-ttl 1)}
+    (is (nil? (with-bindings {#'*wp* (mk-ttl 1)}
                 (do
                   (put! "demo" "t7" {"bin7" "v7"})
                   (Thread/sleep 2000)
