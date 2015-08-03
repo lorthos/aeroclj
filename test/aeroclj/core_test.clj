@@ -72,14 +72,14 @@
     )
   (testing "multi-get"
     (is (= [{"bin1" "value1"} {"bin1" "value1" "bin2" "value2"}]
-           (let [keys [(mkkey "test" "demo" "test1")
-                       (mkkey "test" "demo" "test2")]
+           (let [keys [(mk-key "test" "demo" "test1")
+                       (mk-key "test" "demo" "test2")]
                  akeys (into-array Key keys)]
              (mget akeys))
            ))
     )
   (testing "make operation"
-    (is (not (nil? (mkop :get (mk-bin "name" 1)))))
+    (is (not (nil? (mk-op :get (mk-bin "name" 1)))))
     )
   (testing "operate"
     (is (= {"b1" 2}

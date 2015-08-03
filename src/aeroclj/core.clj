@@ -27,7 +27,7 @@
 (defn close! [^AerospikeClient conn]
   (.close conn))
 
-(defn mkkey [^String ns ^String set ^String key]
+(defn mk-key [^String ns ^String set ^String key]
   (Key. ns set key))
 
 (defn mk-bin [^String name value]
@@ -50,7 +50,7 @@
   ([set key bins]
    (put! @conn-atom @ns-atom set key bins))
   ([^AerospikeClient conn ns set key bins]
-   (.put conn *wp* (mkkey ns set key) (->bin bins)))
+   (.put conn *wp* (mk-key ns set key) (->bin bins)))
   )
 
 (defn mk-ttl [^Integer sec]
@@ -62,7 +62,7 @@
   ([set key]
    (get @conn-atom @ns-atom set key))
   ([^AerospikeClient conn ns set key]
-   (let [record ^Record (.get conn *wp* (mkkey ns set key))]
+   (let [record ^Record (.get conn *wp* (mk-key ns set key))]
      (when record
        (.bins record)))))
 
@@ -79,10 +79,10 @@
   ([set key]
    (delete! @conn-atom @ns-atom set key))
   ([^AerospikeClient conn ns set key]
-   (.delete conn *wp* (mkkey ns set key)))
+   (.delete conn *wp* (mk-key ns set key)))
   )
 
-(defn mkop
+(defn mk-op
   "create the operation based on the type and bin
   [:get bin1 :put bin2 :delete bin3]
   "
@@ -97,7 +97,7 @@
 
 (defn ->ops [params]
   (let [op-parts (partition 3 (seq params))]
-    (map #(mkop (first %) (mk-bin (first (rest %)) (second (rest %)))) op-parts)))
+    (map #(mk-op (first %) (mk-bin (first (rest %)) (second (rest %)))) op-parts)))
 
 
 (defn operate!
@@ -108,5 +108,5 @@
 
   "
   ([^AerospikeClient conn ns set key & ops]
-   (.operate conn *wp* (mkkey ns set key) (into-array Operation (->ops ops))))
+   (.operate conn *wp* (mk-key ns set key) (into-array Operation (->ops ops))))
   )

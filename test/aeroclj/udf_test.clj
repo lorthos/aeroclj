@@ -27,10 +27,18 @@
     (is (= 1
            (do
              (put! @conn "test" "demo" "test1" {"bin1" "value1"})
-             (execute! @conn (mkkey "test" "demo" "test1")
+             (execute! @conn (mk-key "test" "demo" "test1")
                        "readbin.lua" "read_bin" (Value/get "bin1"))
 
              )
            ))
+    )
+  (testing "execute udf with multiple arguments"
+    (is (= 1 (do
+               (register-and-wait! @conn-atom "resources/multiadd.lua" "/tmp/multiadd.lua")
+               (put! @conn "test" "demo" "test2" {"bin0" 2 "bin1" 10 "bin2" 5})
+               (execute! @conn (mk-key "test" "demo" "test2")
+                         "multiadd.lua" "multi_add" (Value/get "bin1")(Value/get "bin2"))
+               )))
     )
   )
