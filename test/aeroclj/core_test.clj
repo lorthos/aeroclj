@@ -18,7 +18,7 @@
 (deftest core-test
   (testing "mkbin"
     (is (= (Bin. "bin1" "value1")
-           (first (mk-bin {"bin1" "value1"}))
+           (mk-bin "bin1" "value1")
            ))
     )
   (testing " put! and get"

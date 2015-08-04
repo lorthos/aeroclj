@@ -18,7 +18,7 @@
 
 (deftest query-test
   (testing "create secondary index"
-    (put! @conn "test" "demo" "test1" {"bin1" "value1"})
+    (put! @conn "test" "demo" "qtest1" {"bin1" "value1"})
     (is (nil?
           (create-index! @conn "test" "demo" "si1" "bin1" :string)))
     (is (thrown? RuntimeException (create-index! @conn "test" "demo" "si1" "bin1" :asd)))

@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [get])
   (:require [clojure.test :refer :all]
             [aeroclj.udf :refer :all]
-            [aeroclj.core :refer :all])
+            [aeroclj.core :refer :all]
+            [clojure.java.io :as io])
   (:import (com.aerospike.client Value)))
 
 (def conn (atom nil))
@@ -20,25 +21,25 @@
 (deftest udf-test
   (testing "register"
     (is (nil?
-          (register-and-wait! @conn-atom "resources/readbin.lua" "readbin.lua")
+          (register-and-wait! @conn-atom (.getPath (io/resource "readbin.lua")) "readbin.lua")
           ))
     )
   (testing "execute"
-    (is (= 1
+    (is (= "value1"
            (do
              (put! @conn "test" "demo" "utest1" {"bin1" "value1"})
              (execute! @conn (mk-key "test" "demo" "test1")
-                       "readbin.lua" "read_bin" (Value/get "bin1"))
+                       "readbin" "read_bin" (Value/get "bin1"))
 
              )
            ))
     )
   (testing "execute udf with multiple arguments"
-    (is (= 1 (do
-               (register-and-wait! @conn-atom "resources/multiadd.lua" "/tmp/multiadd.lua")
-               (put! @conn "test" "demo" "utest2" {"bin0" 2 "bin1" 10 "bin2" 5})
-               (execute! @conn (mk-key "test" "demo" "test2")
-                         "multiadd.lua" "multi_add" (Value/get "bin1")(Value/get "bin2"))
+    (is (= 25 (do
+               (register-and-wait! @conn-atom (.getPath (io/resource "multiadd.lua")) "multiadd.lua")
+               (put! @conn "test" "demo" "utest2" {"bin0" 2 })
+               (execute! @conn (mk-key "test" "demo" "utest2")
+                         "multiadd" "multi_add" (Value/get 10)(Value/get 5))
                )))
     )
   )
