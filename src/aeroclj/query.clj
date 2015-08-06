@@ -1,5 +1,5 @@
 (ns aeroclj.query
-  (:import (com.aerospike.client AerospikeClient)
+  (:import (com.aerospike.client AerospikeClient Value)
            (com.aerospike.client.query IndexType Statement Filter)
            (com.aerospike.client.task IndexTask)
            (com.aerospike.client.policy QueryPolicy))
@@ -21,13 +21,14 @@
                    ^String set ^String index-name]
   (.dropIndex conn core/*wp* ns set index-name))
 
-(defn mk-statement [^String ns ^String set-name & filters]
-  (let [stmt (doto (Statement.)
-               (.setNamespace ns)
-               (.setSetName set-name)
-               (.setFilters (into-array Filter filters)))]
-    stmt
-    )
+(defn mk-statement [{ns :ns set-name :set index :index bins :bins} & filters]
+  (let [stmt (Statement.)]
+    (when ns (.setNamespace stmt ns))
+    (when set-name (.setSetName stmt set-name))
+    (when index (.setIndexName stmt index))
+    (when bins (.setBinNames stmt bins))
+    (when filters (.setFilters stmt (into-array Filter filters)))
+    stmt)
   )
 
 
@@ -38,6 +39,16 @@
   (Filter/range name begin end))
 
 
+;TODO doall?
 (defn query [^AerospikeClient conn ^Statement stmt]
   (with-open [rs (.query conn *qp* stmt)]
-    (iterator-seq (.iterator rs))))
+    (let [iseq (doall (iterator-seq (.iterator rs)))]
+      iseq
+      )))
+
+(defn queryAggregate [^AerospikeClient conn ^Statement stmt ^String package-name
+                      ^String function-name & values]
+  (with-open [rs (.queryAggregate conn *qp* stmt package-name function-name (into-array Value values))]
+    (let [iseq (doall (iterator-seq (.iterator rs)))]
+      iseq
+      )))

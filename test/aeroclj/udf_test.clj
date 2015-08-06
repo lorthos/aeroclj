@@ -3,14 +3,15 @@
   (:require [clojure.test :refer :all]
             [aeroclj.udf :refer :all]
             [aeroclj.core :refer :all]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [aeroclj.env :as e])
   (:import (com.aerospike.client Value)))
 
 (def conn (atom nil))
 
 (defn aero-fixture [f]
-  (reset! conn (connect! "192.168.99.100" 32771))
-  (init-once! @conn "test")
+  (reset! conn (connect! (:host e/props) (:port e/props)))
+  (init-once! @conn "test" "demo")
   (f)
   (close! @conn)
   (reset! conn nil))

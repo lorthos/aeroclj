@@ -2,7 +2,7 @@
   "Idiomatic Clojure wrapper around AeroSpike Java client."
 
   (:import (com.aerospike.client AerospikeClient Key Bin Record Operation)
-           (com.aerospike.client.policy WritePolicy ClientPolicy)
+           (com.aerospike.client.policy WritePolicy ClientPolicy GenerationPolicy RecordExistsAction CommitLevel)
            (clojure.lang IPersistentMap))
   (:refer-clojure :exclude [get]))
 
@@ -13,6 +13,7 @@
 (def ^:dynamic ^Integer *sleep-interval* 1000)
 
 (def ns-atom (atom "test"))
+(def set-atom (atom "demo"))
 (def conn-atom (atom nil))
 
 
@@ -42,25 +43,48 @@
   to be used for all future requests
   since namespace is not dynamic, we can maybe
   use a default with a shorter aritry"
-  [^AerospikeClient conn ^String ns]
+  [^AerospikeClient conn ^String ns ^String set-name]
   (reset! ns-atom ns)
+  (reset! set-atom set-name)
   (reset! conn-atom conn))
 
 (defn put!
-  ([set key bins]
-   (put! @conn-atom @ns-atom set key bins))
+  ([key bins]
+   (put! @conn-atom @ns-atom @set-atom key bins))
   ([^AerospikeClient conn ns set key bins]
    (.put conn *wp* (mk-key ns set key) (->bin bins)))
   )
 
-(defn mk-ttl [^Integer sec]
+(defn mk-wp [& {:keys [:ttl :gen :gen-policy :commit-level :record-exists-action]}]
   (let [wp (WritePolicy.)]
-    (set! (. wp expiration) sec)
+    (when ttl (set! (. wp expiration) ttl))
+    (when gen (set! (. wp generation) gen))
+    (when gen-policy (set! (. wp generationPolicy)
+                           (case gen-policy
+                             (:none GenerationPolicy/NONE)
+                             (:eq GenerationPolicy/EXPECT_GEN_EQUAL)
+                             (:gt GenerationPolicy/EXPECT_GEN_GT)
+                             (throw (new RuntimeException "unknown GenerationPolicy value!")))))
+    (when record-exists-action (set! (. wp recordExistsAction)
+                                     (case record-exists-action
+                                       (:create-only RecordExistsAction/CREATE_ONLY)
+                                       (:replace RecordExistsAction/REPLACE)
+                                       (:replace-only RecordExistsAction/REPLACE_ONLY)
+                                       (:update RecordExistsAction/UPDATE)
+                                       (:update-only RecordExistsAction/UPDATE_ONLY)
+                                       (throw (new RuntimeException "unknown RecordExistsAction value!")))))
+    (when commit-level (set! (. wp commitLevel)
+                           (case commit-level
+                             (:all CommitLevel/COMMIT_ALL)
+                             (:master CommitLevel/COMMIT_MASTER)
+                             (throw (new RuntimeException "unknown CommitLevel value!")))))
+
+
     wp))
 
 (defn get
-  ([set key]
-   (get @conn-atom @ns-atom set key))
+  ([key]
+   (get @conn-atom @ns-atom @set-atom key))
   ([^AerospikeClient conn ns set key]
    (let [record ^Record (.get conn *wp* (mk-key ns set key))]
      (when record
@@ -76,8 +100,8 @@
   )
 
 (defn delete!
-  ([set key]
-   (delete! @conn-atom @ns-atom set key))
+  ([key]
+   (delete! @conn-atom @ns-atom @set-atom key))
   ([^AerospikeClient conn ns set key]
    (.delete conn *wp* (mk-key ns set key)))
   )
@@ -87,7 +111,6 @@
   [:get bin1 :put bin2 :delete bin3]
   "
   [op-type bin]
-  (println op-type bin)
   (case op-type
     :get (Operation/get)
     :put (Operation/put bin)

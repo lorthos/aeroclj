@@ -27,6 +27,20 @@ Idiomatic Clojure wrapper around AeroSpike Java client.
 
 ###Query
 * manage indexes (create-index!) (drop-index!)
+* query (query)
+
+###Aggregation
+* query aggregate (queryAggregate)
+
+###Scan
+* scan all (scan-all) (mk-scanner)
+
+
+###TODO
+* Large data type
+* logging
+* async client
+* doc
 
 
 ## License
