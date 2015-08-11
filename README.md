@@ -2,6 +2,22 @@
 
 Idiomatic Clojure wrapper around AeroSpike Java client.
 
+##Artifacts
+
+
+With Leiningen:
+
+        [aeroclj "0.1.0"]
+
+With Maven:
+
+        <dependency>
+          <groupId>aeroclj</groupId>
+          <artifactId>aeroclj</artifactId>
+          <version>0.1.0</version>
+        </dependency>
+
+
 ## Usage
 
     (connect! "192.168.99.100" 32771)
