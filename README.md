@@ -2,6 +2,9 @@
 
 Idiomatic Clojure wrapper around AeroSpike Java client.
 
+
+[![Build Status](https://travis-ci.org/codemomentum/aeroclj.png)](https://travis-ci.org/codemomentum/aeroclj.png)
+
 ##Artifacts
 
 [![Clojars Project](http://clojars.org/aeroclj/latest-version.svg)](http://clojars.org/aeroclj)
