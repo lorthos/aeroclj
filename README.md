@@ -4,10 +4,7 @@ Idiomatic Clojure wrapper around AeroSpike Java client.
 
 ##Artifacts
 
-
-With Leiningen:
-
-        [![Clojars Project](http://clojars.org/aeroclj/latest-version.svg)](http://clojars.org/aeroclj)
+[![Clojars Project](http://clojars.org/aeroclj/latest-version.svg)](http://clojars.org/aeroclj)
 
 With Maven:
 
