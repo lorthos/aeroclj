@@ -1,4 +1,4 @@
-(defproject aeroclj "0.1.1-SNAPSHOT"
+(defproject aeroclj "0.1.1"
   :description "Idiomatic Clojure wrapper around AeroSpike Java client."
   :url "https://github.com/codemomentum/aeroclj"
   :dependencies [[org.clojure/clojure "1.8.0"]
