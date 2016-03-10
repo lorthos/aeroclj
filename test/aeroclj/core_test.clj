@@ -91,6 +91,12 @@
              (operate! @conn-atom @ns-atom @set-atom "t9" :add "b1" 1 :put "b2" nil)
              (get "t9")
              )))
+    (is (= {"b1" 110 "b2" 190}
+           (do
+             (put! "t10" {"b1" 100 "b2" 200})
+             (operate! @conn-atom @ns-atom @set-atom "t10" :add "b1" 10 :add "b2" -10)
+             (get "t10")
+             )))
     )
 
   )

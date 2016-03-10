@@ -1,8 +1,8 @@
 (defproject aeroclj "0.1.1-SNAPSHOT"
   :description "Idiomatic Clojure wrapper around AeroSpike Java client."
   :url "https://github.com/codemomentum/aeroclj"
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [com.aerospike/aerospike-client "3.1.3"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [com.aerospike/aerospike-client "3.2.1"]]
   :min-lein-version "2.4.3"
   ;release
   :scm {:name "git"
