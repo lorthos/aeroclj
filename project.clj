@@ -9,7 +9,7 @@
         :url "https://github.com/codemomentum/aeroclj"}
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :signing {:gpg-key "218C6198"}
+  :signing {:gpg-key "9A99FE74"}
   ;; This directive (and the {:creds :gpg} section) tells
   ;; Leiningen how to find your Clojars account credentials.
   ;; You set those up already, right?
