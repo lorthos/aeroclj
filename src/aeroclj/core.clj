@@ -2,14 +2,15 @@
   "Idiomatic Clojure wrapper around AeroSpike Java client."
 
   (:import (com.aerospike.client AerospikeClient Key Bin Record Operation)
-           (com.aerospike.client.policy WritePolicy ClientPolicy GenerationPolicy RecordExistsAction CommitLevel)
+           (com.aerospike.client.policy WritePolicy ClientPolicy GenerationPolicy RecordExistsAction CommitLevel Policy BatchPolicy)
            (clojure.lang IPersistentMap))
   (:refer-clojure :exclude [get]))
 
 (def ^:dynamic ^String *aero-host* "192.168.99.100")
 (def ^:dynamic ^Integer *aero-port* 32771)
 (def ^:dynamic ^WritePolicy *wp* (WritePolicy.))
-(def ^:dynamic ^ClientPolicy *cp* (ClientPolicy.))
+(def ^:dynamic ^Policy *rp* (Policy.))
+(def ^:dynamic ^BatchPolicy *bp* (BatchPolicy.))
 (def ^:dynamic ^Integer *sleep-interval* 1000)
 
 (def ns-atom (atom "test"))
@@ -86,7 +87,7 @@
   ([key]
    (get @conn-atom @ns-atom @set-atom key))
   ([^AerospikeClient conn ns set key]
-   (let [record ^Record (.get conn *wp* (mk-key ns set key))]
+   (let [record ^Record (.get conn *rp* (mk-key ns set key))]
      (when record
        (.bins record)))))
 
@@ -94,7 +95,7 @@
   ([#^"[Lcom.aerospike.client.Key;" keys]
    (mget @conn-atom keys))
   ([^AerospikeClient conn keys]
-   (let [records (seq (.get conn *wp* keys))]
+   (let [records (seq (.get conn *bp* keys))]
      (when records
        (map #(.bins %) records))))
   )
