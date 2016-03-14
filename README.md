@@ -3,11 +3,11 @@
 Idiomatic Clojure wrapper around AeroSpike Java client.
 
 
-[![Build Status](https://travis-ci.org/codemomentum/aeroclj.png)](https://travis-ci.org/codemomentum/aeroclj.png)
+[![Build Status](https://travis-ci.org/lorthos/aeroclj.png)](https://travis-ci.org/lorthos/aeroclj.png)
 
 ##Artifacts
 
-[![Clojars Project](http://clojars.org/aeroclj/latest-version.svg)](http://clojars.org/aeroclj)
+[![Clojars Project](http://clojars.org/lorthos/latest-version.svg)](http://clojars.org/aeroclj)
 
 With Maven:
 
