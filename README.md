@@ -7,14 +7,14 @@ Idiomatic Clojure wrapper around AeroSpike Java client.
 
 ##Artifacts
 
-[![Clojars Project](http://clojars.org/lorthos/latest-version.svg)](http://clojars.org/aeroclj)
+[![Clojars Project](http://clojars.org/aeroclj/latest-version.svg)](http://clojars.org/aeroclj)
 
 With Maven:
 
         <dependency>
           <groupId>aeroclj</groupId>
           <artifactId>aeroclj</artifactId>
-          <version>0.1.0</version>
+          <version>0.1.1</version>
         </dependency>
 
 
