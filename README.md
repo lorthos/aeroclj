@@ -5,7 +5,7 @@ Idiomatic Clojure wrapper around AeroSpike Java client.
 
 [![Build Status](https://travis-ci.org/lorthos/aeroclj.png)](https://travis-ci.org/lorthos/aeroclj.png)
 
-##Artifacts
+## Artifacts
 
 [![Clojars Project](http://clojars.org/aeroclj/latest-version.svg)](http://clojars.org/aeroclj)
 
@@ -27,32 +27,32 @@ With Maven:
 
 ## Api
 
-###Connection
+### Connection
 * connect (connect!) (connect-to-multi!)
 
-###Key Value Store
+### Key Value Store
 * write (put!)
 * read (get)
 * batch read (mget)
 * delete (delete!)
 * operate (operate!)
 
-###UDF
+### UDF
 * register (register-and-wait!)
 * execute (execute!)
 
-###Query
+### Query
 * manage indexes (create-index!) (drop-index!)
 * query (query)
 
-###Aggregation
+### Aggregation
 * query aggregate (queryAggregate)
 
-###Scan
+### Scan
 * scan all (scan-all) (mk-scanner)
 
 
-###TODO
+### TODO
 * Large data type
 * logging
 * async client
